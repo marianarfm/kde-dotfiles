@@ -3,8 +3,7 @@ A minimal configuration for KDE desktops using the Nord theme
 
 ## Preview
 <center>
-  <img src="screenshots/desktop.png" alt="Desktop Screenshot">
-  <img src="screenshots/terminal.png" alt="Terminal Screenshot">
+  <img src="screenshots/preview.png" alt="Preview Screenshot">
 </center>
 
 ## Details
