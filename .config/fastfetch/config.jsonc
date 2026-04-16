@@ -1,0 +1,124 @@
+{
+  "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/master/doc/json_schema.json",
+  "logo": {
+    "source": "builtin",
+    "padding": {
+      "top": 2,
+      "left": 1,
+      "right": 2
+    }
+  },
+  "display": {
+    "separator": "  "
+  },
+  "modules": [
+    {
+      "type": "title",
+      "format": "{#}╭───────────── {#}{user-name-colored}"
+    },
+    {
+      "type": "custom",
+      "format": "{#}│ {#}System Information"
+    },
+    {
+      "type": "os",
+      "key": "{#}│  {#keys}󰍹 OS"
+    },
+    {
+      "type": "kernel",
+      "key": "{#}│  {#keys}󰒋 Kernel"
+    },
+    {
+      "type": "uptime",
+      "key": "{#}│  {#keys}󰅐 Uptime"
+    },
+    {
+      "type": "command",
+      "key": "{#}│  {#keys}󰸗 OS Age",
+      "text": "birth_install=$(stat -c %W /); current=$(date +%s); time_progression=$((current - birth_install)); days_difference=$((time_progression / 86400)); echo $days_difference days"
+    },
+    {
+      "type": "packages",
+      "key": "{#}│  {#keys}󰏖 Packages"
+    },
+    {
+      "type": "shell",
+      "key": "{#}│  {#keys}󰞷 Shell"
+    },
+    {
+      "type": "custom",
+      "format": "{#}│"
+    },
+    {
+      "type": "custom",
+      "format": "{#}│ {#}Desktop Environment"
+    },
+    {
+      "type": "de",
+      "key": "{#}│  {#keys}󰧨 DE"
+    },
+    {
+      "type": "wm",
+      "key": "{#}│  {#keys}󱂬 WM"
+    },
+    {
+      "type": "wmtheme",
+      "key": "{#}│  {#keys}󰉼 Theme"
+    },
+    {
+      "type": "display",
+      "key": "{#}│  {#keys}󰹑 Display"
+    },
+    {
+      "type": "terminal",
+      "key": "{#}│  {#keys}󰆍 Terminal"
+    },
+    {
+      "type": "custom",
+      "format": "{#}│"
+    },
+    {
+      "type": "custom",
+      "format": "{#}│ {#}Hardware Information"
+    },
+    {
+      "type": "cpu",
+      "key": "{#}│  {#keys}󰻠 CPU"
+    },
+    {
+      "type": "gpu",
+      "key": "{#}│  {#keys}󰢮 GPU"
+    },
+    {
+      "type": "memory",
+      "key": "{#}│  {#keys}󰍛 Memory"
+    },
+    {
+      "type": "swap",
+      "key": "{#}│  {#keys}󰓡 Swap"
+    },
+    {
+      "type": "disk",
+      "key": "{#}│  {#keys}󰋊 Disk (/)",
+      "folders": "/"
+    },
+    {
+      "type": "disk",
+      "key": "{#}│  {#keys}󰋊 Disk (HDD)",
+      "folders": "/media/hdd"
+    },
+    {
+      "type": "custom",
+      "format": "{#}│"
+    },
+    {
+      "type": "colors",
+      "key": "{#}│",
+      "symbol": "circle"
+    },
+    {
+      "type": "custom",
+      "format": "{#}╰───────────────────────────────╯"
+    }
+  ]
+}
