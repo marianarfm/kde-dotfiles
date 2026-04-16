@@ -10,12 +10,12 @@ WALLPAPER_PATH="${HOME}/Pictures/Wallpapers/nord_tux.png"
 INSTALL_MAP=(
   ".config/btop:.config/btop"
   ".config/fastfetch:.config/fastfetch"
-  ".local/share/aurorae/themes/nordic:.local/share/aurorae/themes/nordic"
+  ".local/share/aurorae/themes/Nordic:.local/share/aurorae/themes/Nordic"
   ".local/share/color-schemes/nordic.colors:.local/share/color-schemes/nordic.colors"
   ".local/share/icons/capitaine-cursors-nord:.local/share/icons/capitaine-cursors-nord"
-  ".local/share/icons/tela-circle:.local/share/icons/tela-circle"
-  ".local/share/icons/tela-circle-dark:.local/share/icons/tela-circle-dark"
-  ".local/share/icons/tela-circle-light:.local/share/icons/tela-circle-light"
+  ".local/share/icons/Tela-circle:.local/share/icons/Tela-circle"
+  ".local/share/icons/Tela-circle-dark:.local/share/icons/Tela-circle-dark"
+  ".local/share/icons/Tela-circle-light:.local/share/icons/Tela-circle-light"
   ".local/share/konsole/Nord.profile:.local/share/konsole/Nord.profile"
   ".local/share/konsole/nord.colorscheme:.local/share/konsole/nord.colorscheme"
   ".local/share/plasma/desktoptheme/polar-gleam:.local/share/plasma/desktoptheme/polar-gleam"
@@ -40,28 +40,49 @@ for (const desktop of desktops()) {
 }
 EOF
 
-  qdbus6 org.kde.PlasmaShell /PlasmaShell org.kde.PlasmaShell.evaluateScript "$script" >/dev/null
+  if qdbus6 org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.evaluateScript "$script" >/dev/null 2>&1; then
+    return 0
+  fi
+
+  if qdbus6 org.kde.PlasmaShell /PlasmaShell org.kde.PlasmaShell.evaluateScript "$script" >/dev/null 2>&1; then
+    return 0
+  fi
+
+  echo "Failed to apply the desktop wallpaper through Plasma D-Bus. The files were installed, but you may need to set the desktop wallpaper manually."
+  return 1
+}
+
+refresh_plasma() {
+  echo "Refreshing Plasma"
+  kbuildsycoca6 >/dev/null 2>&1 || true
+  qdbus6 org.kde.KWin /KWin reconfigure >/dev/null 2>&1 || true
+  kquitapp6 plasmashell >/dev/null 2>&1 || true
+  (plasmashell >/dev/null 2>&1 &) || true
 }
 
 apply_theme_settings() {
   command -v kwriteconfig6 >/dev/null 2>&1 || { echo "Missing required command: kwriteconfig6"; exit 1; }
   command -v plasma-apply-colorscheme >/dev/null 2>&1 || { echo "Missing required command: plasma-apply-colorscheme"; exit 1; }
+  command -v plasma-apply-cursortheme >/dev/null 2>&1 || { echo "Missing required command: plasma-apply-cursortheme"; exit 1; }
   command -v plasma-apply-desktoptheme >/dev/null 2>&1 || { echo "Missing required command: plasma-apply-desktoptheme"; exit 1; }
   command -v qdbus6 >/dev/null 2>&1 || { echo "Missing required command: qdbus6"; exit 1; }
+  [[ -x /usr/lib/plasma-apply-aurorae ]] || { echo "Missing required command: /usr/lib/plasma-apply-aurorae"; exit 1; }
 
   [[ -e "$WALLPAPER_PATH" ]] || { echo "Wallpaper not found at ${WALLPAPER_PATH}"; exit 1; }
 
   echo "Applying KDE settings"
-  plasma-apply-colorscheme nordic
-  plasma-apply-desktoptheme Polar-Gleam
-  kwriteconfig6 --file kwinrc --group org.kde.kdecoration2 --group Windeco --key library org.kde.kwin.aurorae
-  kwriteconfig6 --file kwinrc --group org.kde.kdecoration2 --group Windeco --key theme Nordic
+  plasma-apply-colorscheme nordic >/dev/null 2>&1
+  plasma-apply-desktoptheme polar-gleam >/dev/null 2>&1
+  /usr/lib/plasma-apply-aurorae __aurorae__svg__Nordic >/dev/null 2>&1
   kwriteconfig6 --file kdeglobals --group Icons --key Theme Tela-circle-dark
-  kwriteconfig6 --file kcminputrc --group Mouse --key cursorTheme "Capitaine Cursors (Nord)"
+  kwriteconfig6 --file kcminputrc --group Mouse --key cursorTheme "capitaine-cursors-nord"
   kwriteconfig6 --file kcminputrc --group Mouse --key cursorSize 32
+  plasma-apply-cursortheme "breeze_cursors" >/dev/null 2>&1 || true
+  plasma-apply-cursortheme "capitaine-cursors-nord" >/dev/null 2>&1 || echo "Failed to apply the cursor theme automatically. You may need to switch it once in System Settings."
   kwriteconfig6 --file konsolerc --group Desktop Entry --key DefaultProfile Nord.profile
   apply_desktop_wallpaper
   kwriteconfig6 --file kscreenlockerrc --group Greeter --group Wallpaper --group org.kde.image --group General --key Image "${WALLPAPER_PATH}"
+  refresh_plasma
 }
 
 while [[ $# -gt 0 ]]; do
