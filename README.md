@@ -2,9 +2,8 @@
 A minimal configuration for KDE desktops using the Nord theme
 
 ## Preview
-<center>
-  <img src="screenshots/preview.png" alt="Preview Screenshot">
-</center>
+![Desktop Screenshot](screenshots/desktop.png)
+![Terminal Screenshot](screenshots/terminal.png)
 
 ## Details
 * **Operational System:** CachyOS
